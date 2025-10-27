@@ -3,7 +3,6 @@
                ./main --file (to open one)
                ./main        (just to see the editor)
 */
-
 #include <ctype.h>
 #include <stdio.h>
 #include <stdlib.h>
@@ -24,7 +23,7 @@ int main(int argc, char *argv[]) {
     int lign = 0;              // nb of lines
     int index = 0;             // position in buffer
     char buffer[MAX_LEN];
-    char* mode[] = {"", "-- INSERT --"};
+    char* mode[] = {"", "-- INSERT --"}; // Can be -- NORMAL -- and -- INSERT --
     int currentMode = 0;
     int previousMode = currentMode;
     bool cmdMod = false;
@@ -35,7 +34,7 @@ int main(int argc, char *argv[]) {
 
     char lines[MAX_LINES][MAX_LEN] = {0};
 
-    // read of the file
+    // reading file if there is one
     if (argc > 1) {
         openedFile = readFile(argv[1], lines, &lign);
         if (!openedFile) {
@@ -97,7 +96,7 @@ int main(int argc, char *argv[]) {
                         return 0;
                     }
                     if (strcmp(cmdBuffer, "w") == 0 || strcmp(cmdBuffer, "wq") == 0) {
-                        if (index > 0) {           // s'il reste des caractères dans le buffer
+                        if (index > 0) {           // if still char in buffer
                             buffer[index] = '\0';
                             strcpy(lines[lign], buffer);
                             lign++;
@@ -105,6 +104,7 @@ int main(int argc, char *argv[]) {
                         }
                         if (writeFile(argv[1], lines, lign)) {
                             printf("\nFichier sauvegardé avec succès !\n");
+                            system("clear");
                         } else {
                             printf("\nErreur lors de la sauvegarde.\n");
                         }
