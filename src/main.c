@@ -34,6 +34,8 @@ int main(int argc, char *argv[]) {
 
     char lines[MAX_LINES][MAX_LEN] = {0};
 
+    system("clear");
+
     // reading file if there is one
     if (argc > 1) {
         openedFile = readFile(argv[1], lines, &lign);
@@ -79,7 +81,7 @@ int main(int argc, char *argv[]) {
             continue;
         }
 
-        // Mode commande
+        // Command Mode
         if (c == ':') {
             cmdMod = true;
             printf("\0337\033[%d;1H\033[K:", lastLine);
@@ -132,8 +134,20 @@ int main(int argc, char *argv[]) {
             }
         }
 
-        // Mode insertion
+        // Insert Mode
         if (currentMode == 1) {
+            if (c == 27) currentMode = 0; // ESC pour quitter le mode insertion
+            
+            if (c == 10) { // Enter
+                buffer[index] = '\0';
+                strcpy(lines[lign], buffer);
+                lign++;        // incrémente seulement après avoir écrit la ligne
+                index = 0;
+                buffer[0] = '\0';
+                printf("\n%d ", lign + 1);
+                fflush(stdout);
+            }
+
             if (isprint(c)) {
                 buffer[index++] = c;
                 printf("%c", c);
@@ -147,17 +161,7 @@ int main(int argc, char *argv[]) {
                 fflush(stdout);
             }
 
-            if (c == 10) { // Enter
-                buffer[index] = '\0';
-                strcpy(lines[lign], buffer);
-                lign++;        // incrémente seulement après avoir écrit la ligne
-                index = 0;
-                buffer[0] = '\0';
-                printf("\n%d ", lign + 1);
-                fflush(stdout);
-            }
 
-            if (c == 27) currentMode = 0; // ESC pour quitter le mode insertion
         }
     }
 
