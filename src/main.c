@@ -12,6 +12,7 @@
 #include <unistd.h>
 #include <sys/ioctl.h>
 #include <stdbool.h>
+#include "../includes/fileReader.h"
 
 #define MAX_LINES 100
 #define MAX_LEN 1024
@@ -33,33 +34,21 @@ int main(int argc, char *argv[]) {
 
     char lines[MAX_LINES][MAX_LEN] = {0};
 
-    // File reader if one
+    // File reader if there is one
     if (argc > 1) {
-        FILE *file = fopen(argv[1], "r");
-        if (file) {
-            lign = 0;
-            while (fgets(lines[lign], MAX_LEN, file)) {
-                size_t len = strlen(lines[lign]);
-                if (len > 0 && lines[lign][len - 1] == '\n') {
-                    lines[lign][len - 1] = '\0';
-                }
-                lign++;
-                if (lign >= MAX_LINES) break;
-            }
-            fclose(file);
-            openedFile = true;
-        } else {
+        openedFile = readFile(argv[1], lines, &lign);
+        if (!openedFile) {
             printf("Impossible d'ouvrir le fichier : %s\n", argv[1]);
         }
     }
 
 
-    // Récupère la taille du terminal
+    // Get terminal size
     struct winsize w;
     ioctl(STDOUT_FILENO, TIOCGWINSZ, &w);
     int lastLine = w.ws_row;
 
-    // Affiche le contenu du fichier
+    // print file content if there is one
     if (openedFile) {
         for (int i = 0; i < lign; i++) {
             printf("%d %s\n", i + 1, lines[i]);

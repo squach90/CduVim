@@ -1,6 +1,6 @@
 CC = gcc
 CFLAGS = -Wall -Wextra -O2
-SRC = src/main.c
+SRC = src/main.c src/fileReader.c
 OUT = main
 
 all: $(OUT)
