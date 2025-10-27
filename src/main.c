@@ -92,6 +92,7 @@ int main(int argc, char *argv[]) {
                     cmdBuffer[cmdIndex] = '\0';
 
                     if (strcmp(cmdBuffer, "q") == 0) {
+                        system("clear");
                         tcsetattr(STDIN_FILENO, TCSANOW, &old);
                         return 0;
                     }
